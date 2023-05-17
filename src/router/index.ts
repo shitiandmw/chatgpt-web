@@ -6,10 +6,20 @@ import { ChatLayout } from '@/views/chat/layout'
 
 const routes: RouteRecordRaw[] = [
   {
-    path: '/',
+    path: '/:share?',
     name: 'Root',
     component: ChatLayout,
-    redirect: '/chat',
+    redirect: (to) => {
+      // 方法接收目标路由作为参数
+      // return 重定向的字符串路径/路径对象
+      return { path: '/chat', query: { share: to.params.share } }
+    },
+    // redirect: (to) => {
+    //   // 方法接收目标路由作为参数
+    //   // return 重定向的字符串路径/路径对象
+    //   return { path: '/chat', params: { share: '11111' } }
+
+    // },
     children: [
       {
         path: '/chat/:uuid?',

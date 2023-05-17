@@ -1,15 +1,23 @@
 import axios, { type AxiosResponse } from 'axios'
 import { useAuthStore } from '@/store'
+import { ss } from '@/utils/storage'
 
 const service = axios.create({
   baseURL: import.meta.env.VITE_GLOB_API_URL,
 })
 
 service.interceptors.request.use(
-  (config) => {
-    const token = useAuthStore().token
+  async (config) => {
+    const deviceId = await useAuthStore().getDeviceId()
+    const token = await useAuthStore().getToken(config.url)
+    const share = ss.get('SHARE')
+    if (share)
+      config.headers.Share = share
+
+    if (deviceId)
+      config.headers.DeviceId = deviceId
     if (token)
-      config.headers.Authorization = `Bearer ${token}`
+      config.headers.Authorization = `${token.token}`
     return config
   },
   (error) => {

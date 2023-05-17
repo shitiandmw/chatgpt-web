@@ -1,13 +1,12 @@
 <script setup lang='ts'>
 import { computed, ref } from 'vue'
-import { NDropdown, useMessage } from 'naive-ui'
+import { NDropdown } from 'naive-ui'
 import AvatarComponent from './Avatar.vue'
 import TextComponent from './Text.vue'
 import { SvgIcon } from '@/components/common'
+import { copyText } from '@/utils/format'
 import { useIconRender } from '@/hooks/useIconRender'
 import { t } from '@/locales'
-import { useBasicLayout } from '@/hooks/useBasicLayout'
-import { copyToClip } from '@/utils/copy'
 
 interface Props {
   dateTime?: string
@@ -26,11 +25,7 @@ const props = defineProps<Props>()
 
 const emit = defineEmits<Emit>()
 
-const { isMobile } = useBasicLayout()
-
 const { iconRender } = useIconRender()
-
-const message = useMessage()
 
 const textRef = ref<HTMLElement>()
 
@@ -66,7 +61,7 @@ const options = computed(() => {
 function handleSelect(key: 'copyText' | 'delete' | 'toggleRenderType') {
   switch (key) {
     case 'copyText':
-      handleCopy()
+      copyText({ text: props.text ?? '' })
       return
     case 'toggleRenderType':
       asRawText.value = !asRawText.value
@@ -79,16 +74,6 @@ function handleSelect(key: 'copyText' | 'delete' | 'toggleRenderType') {
 function handleRegenerate() {
   messageRef.value?.scrollIntoView()
   emit('regenerate')
-}
-
-async function handleCopy() {
-  try {
-    await copyToClip(props.text || '')
-    message.success('复制成功')
-  }
-  catch {
-    message.error('复制失败')
-  }
 }
 </script>
 
@@ -128,12 +113,7 @@ async function handleCopy() {
           >
             <SvgIcon icon="ri:restart-line" />
           </button>
-          <NDropdown
-            :trigger="isMobile ? 'click' : 'hover'"
-            :placement="!inversion ? 'right' : 'left'"
-            :options="options"
-            @select="handleSelect"
-          >
+          <NDropdown :placement="!inversion ? 'right' : 'left'" :options="options" @select="handleSelect">
             <button class="transition text-neutral-300 hover:text-neutral-800 dark:hover:text-neutral-200">
               <SvgIcon icon="ri:more-2-fill" />
             </button>

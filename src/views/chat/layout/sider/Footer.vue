@@ -1,10 +1,19 @@
 <script setup lang='ts'>
-import { defineAsyncComponent, ref } from 'vue'
+import { computed, defineAsyncComponent, ref } from 'vue'
+import LicenseComponent from '../../components/License/index.vue'
 import { HoverButton, SvgIcon, UserAvatar } from '@/components/common'
+import { useAuthStore } from '@/store'
+
+const authStore = useAuthStore()
+const tokenInfo = computed(() => authStore.token)
 
 const Setting = defineAsyncComponent(() => import('@/components/common/Setting/index.vue'))
 
 const show = ref(false)
+
+function updNeedStatus() {
+  authStore.updNeedStatus(true)
+}
 </script>
 
 <template>
@@ -21,4 +30,5 @@ const show = ref(false)
 
     <Setting v-if="show" v-model:visible="show" />
   </footer>
+  <LicenseComponent />
 </template>

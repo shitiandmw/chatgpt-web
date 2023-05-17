@@ -4,6 +4,7 @@ import { NLayout, NLayoutContent } from 'naive-ui'
 import { useRouter } from 'vue-router'
 import Sider from './sider/index.vue'
 import Permission from './Permission.vue'
+import Share from './Share.vue'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { useAppStore, useAuthStore, useChatStore } from '@/store'
 
@@ -18,7 +19,11 @@ const { isMobile } = useBasicLayout()
 
 const collapsed = computed(() => appStore.siderCollapsed)
 
-const needPermission = computed(() => !!authStore.session?.auth && !authStore.token)
+const needPermission = computed(() => !authStore.token || !authStore.token.is_use)
+const needUpdToken = computed(() => authStore.need_upd_token)
+const needShare = computed(() => authStore.need_share)
+
+// const needPermission = true
 
 const getMobileClass = computed(() => {
   if (isMobile.value)
@@ -46,6 +51,8 @@ const getContainerClass = computed(() => {
         </NLayoutContent>
       </NLayout>
     </div>
-    <Permission :visible="needPermission" />
+    <Permission :visible="needPermission" :mode="1" />
+    <Permission :visible="needUpdToken" :mode="2" />
+    <Share v-if="needShare" :visible="needShare" />
   </div>
 </template>

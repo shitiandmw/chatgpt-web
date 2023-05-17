@@ -1,8 +1,12 @@
 <script lang="ts" setup>
 import { computed, nextTick } from 'vue'
 import { HoverButton, SvgIcon } from '@/components/common'
-import { useAppStore, useChatStore } from '@/store'
+import { useAppStore, useAuthStore, useChatStore } from '@/store'
 
+defineProps<Props>()
+const emit = defineEmits<Emit>()
+const authStore = useAuthStore()
+const tokenInfo = computed(() => authStore.token)
 interface Props {
   usingContext: boolean
 }
@@ -11,10 +15,6 @@ interface Emit {
   (ev: 'export'): void
   (ev: 'toggleUsingContext'): void
 }
-
-defineProps<Props>()
-
-const emit = defineEmits<Emit>()
 
 const appStore = useAppStore()
 const chatStore = useChatStore()
@@ -62,6 +62,13 @@ function toggleUsingContext() {
         {{ currentChatHistory?.title ?? '' }}
       </h1>
       <div class="flex items-center space-x-2">
+        <a
+          href="https://www.houfaka.com/links/18D1CB7C"
+          target="_blank"
+          class="h-6 bg-orange-600 rounded-2xl text-xs flex items-center justify-center px-2 text-white cursor-pointer"
+        >
+          购买激活码
+        </a>
         <HoverButton @click="toggleUsingContext">
           <span class="text-xl" :class="{ 'text-[#4b9e5f]': usingContext, 'text-[#a8071a]': !usingContext }">
             <SvgIcon icon="ri:chat-history-line" />
@@ -74,5 +81,7 @@ function toggleUsingContext() {
         </HoverButton>
       </div>
     </div>
+
+    <!-- <LicenseComponent /> -->
   </header>
 </template>

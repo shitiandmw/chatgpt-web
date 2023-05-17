@@ -1,6 +1,6 @@
 import type { AxiosProgressEvent, GenericAbortSignal } from 'axios'
-import { post } from '@/utils/request'
-import { useAuthStore, useSettingStore } from '@/store'
+import { get, post } from '@/utils/request'
+import { useSettingStore } from '@/store'
 
 export function fetchChatAPI<T = any>(
   prompt: string,
@@ -25,28 +25,14 @@ export function fetchChatAPIProcess<T = any>(
     prompt: string
     options?: { conversationId?: string; parentMessageId?: string }
     signal?: GenericAbortSignal
-    onDownloadProgress?: (progressEvent: AxiosProgressEvent) => void },
+    onDownloadProgress?: (progressEvent: AxiosProgressEvent) => void
+  },
 ) {
   const settingStore = useSettingStore()
-  const authStore = useAuthStore()
-
-  let data: Record<string, any> = {
-    prompt: params.prompt,
-    options: params.options,
-  }
-
-  if (authStore.isChatGPTAPI) {
-    data = {
-      ...data,
-      systemMessage: settingStore.systemMessage,
-      temperature: settingStore.temperature,
-      top_p: settingStore.top_p,
-    }
-  }
 
   return post<T>({
     url: '/chat-process',
-    data,
+    data: { prompt: params.prompt, options: params.options, systemMessage: settingStore.systemMessage },
     signal: params.signal,
     onDownloadProgress: params.onDownloadProgress,
   })
@@ -62,5 +48,24 @@ export function fetchVerify<T>(token: string) {
   return post<T>({
     url: '/verify',
     data: { token },
+  })
+}
+
+export function fetchToken(code: string | undefined) {
+  return post({
+    url: '/token-ephemeral',
+    data: { code },
+  })
+}
+
+export function fetchShare() {
+  return post({
+    url: '/share',
+  })
+}
+export function fetchShareList(page: number | undefined) {
+  return get({
+    url: '/share_list',
+    data: { page },
   })
 }

@@ -11,7 +11,7 @@ interface ConfigState {
   apiModel?: string
   socksProxy?: string
   httpsProxy?: string
-  usage?: string
+  balance?: string
 }
 
 const authStore = useAuthStore()
@@ -52,17 +52,17 @@ onMounted(() => {
             href="https://github.com/Chanzhaoyu/chatgpt-web"
             target="_blank"
           >
-            GitHub
+            Github
           </a>
           ，免费且基于 MIT 协议，没有任何形式的付费行为！
         </p>
         <p>
-          如果你觉得此项目对你有帮助，请在 GitHub 帮我点个 Star 或者给予一点赞助，谢谢！
+          如果你觉得此项目对你有帮助，请在 Github 帮我点个 Star 或者给予一点赞助，谢谢！
         </p>
       </div>
       <p>{{ $t("setting.api") }}：{{ config?.apiModel ?? '-' }}</p>
       <p v-if="isChatGPTAPI">
-        {{ $t("setting.monthlyUsage") }}：{{ config?.usage ?? '-' }}
+        {{ $t("setting.balance") }}：{{ config?.balance ?? '-' }}
       </p>
       <p v-if="!isChatGPTAPI">
         {{ $t("setting.reverseProxy") }}：{{ config?.reverseProxy ?? '-' }}
