@@ -3,7 +3,7 @@ import { useAuthStore } from '@/store'
 import { ss } from '@/utils/storage'
 
 const service = axios.create({
-  baseURL: import.meta.env.VITE_GLOB_API_URL,
+  baseURL: "/api",
 })
 
 service.interceptors.request.use(
